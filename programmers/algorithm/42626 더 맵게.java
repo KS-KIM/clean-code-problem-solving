@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
  */
 class ScovilleShaker {
 	private static final int SHAKE_REQUIRE_NUMBER = 2;
-    private static final int SECOND_SCOVILLE_SHAKE_RECIPE_MUL_NUM = 2;
-    
+	private static final int SECOND_SCOVILLE_SHAKE_RECIPE_MUL_NUM = 2;
+
 	private final PriorityQueue<Integer> scovilleShakeJobQueue;
 	private final int targetScoville;
 	private int shakeCount = 0;
@@ -24,13 +24,13 @@ class ScovilleShaker {
 
 	public void shake() {
 		if (!canShake()) {
-            return;
-        }
-        int firstSmallScoville = scovilleShakeJobQueue.poll();
-        int secondSmallScoville = scovilleShakeJobQueue.poll();
-        int shakedFoodScoville = shake(firstSmallScoville, secondSmallScoville);
-        scovilleShakeJobQueue.add(shakedFoodScoville);
-        ++shakeCount;
+			return;
+		}
+		int firstSmallScoville = scovilleShakeJobQueue.poll();
+		int secondSmallScoville = scovilleShakeJobQueue.poll();
+		int shakedFoodScoville = shake(firstSmallScoville, secondSmallScoville);
+		scovilleShakeJobQueue.add(shakedFoodScoville);
+		++shakeCount;
 	}
 
 	public boolean canShake() {
@@ -47,7 +47,7 @@ class ScovilleShaker {
 	private int shake(int firstSmallScoville, int secondSmallScoville) {
 		return firstSmallScoville + secondSmallScoville * SECOND_SCOVILLE_SHAKE_RECIPE_MUL_NUM;
 	}
-	
+
 	public int getShakeCount() {
 		return this.shakeCount;
 	}
