@@ -87,7 +87,7 @@ class PrerequisiteSkill {
 class SkillBook {
 	private final PrerequisiteSkill prerequisiteSkill;
 	private final List<Skill> skills;
-	int learnedPrerequisiteSkill = 0;
+	private int learnedPrerequisiteSkill = 0;
 
 	public SkillBook(PrerequisiteSkill prerequisiteSkill, List<Skill> skills) {
 		this.prerequisiteSkill = Objects.requireNonNull(prerequisiteSkill);
