@@ -74,7 +74,12 @@ class SkillBook {
 }
 
 class SkillFactory {
-	public static Map<Skill, Integer> createPrerequisiteSkills(String input) {
+	public static SkillBook createSkillBook(String input) {
+		Map<Skill, Integer> prerequisiteSkills = createPrerequisiteSkills(input);
+		return new SkillBook(prerequisiteSkills);
+	}
+
+	private static Map<Skill, Integer> createPrerequisiteSkills(String input) {
 		Map<Skill, Integer> skills = new HashMap<>();
 		for (int index = 0; index < input.length(); ++index) {
 			skills.put(new Skill(input.charAt(index)), index);
@@ -93,8 +98,7 @@ class SkillFactory {
 
 class Solution {
 	public int solution(String skill, String[] skillTrees) {
-		Map<Skill, Integer> prerequisiteSkills = SkillFactory.createPrerequisiteSkills(skill);
-		SkillBook skillBook = new SkillBook(prerequisiteSkills);
+		SkillBook skillBook = SkillFactory.createSkillBook(skill);
 		return getCanLearnSkillTreeCount(skillBook, skillTrees);
 	}
 
