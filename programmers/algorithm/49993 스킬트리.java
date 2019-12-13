@@ -1,12 +1,12 @@
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * See https://programmers.co.kr/learn/courses/30/lessons/49993
- * 
+ *
  * @author KSKIM
  * @since 2019-12-13
  */
@@ -41,6 +41,14 @@ class Skill {
 }
 
 class SkillFactory {
+	public static Map<Skill, Integer> createPrerequisiteSkills (String input) {
+		Map<Skill, Integer> skills = new HashMap<>();
+		for (int index = 0; index < input.length(); ++index) {
+			skills.put(new Skill(input.charAt(index)), index);
+		}
+		return skills;
+	}
+
 	public static List<Skill> createSkills (String input) {
 		List<Skill> skills = new ArrayList<>();
 		for (char skill: input.toCharArray()) {
@@ -50,37 +58,23 @@ class SkillFactory {
 	}
 }
 
-// @TODO Refactor List<Skill> to HashMap<Skill, Integer> for efficiency
 class PrerequisiteSkill {
-	private final List<Skill> prerequisiteSkills;
+	private final Map<Skill, Integer> prerequisiteSkills;
 
-	public PrerequisiteSkill(List<Skill> prerequisiteSkills) {
-		validateSkills(prerequisiteSkills);
+	public PrerequisiteSkill(Map<Skill, Integer> prerequisiteSkills) {
 		this.prerequisiteSkills = prerequisiteSkills;
-	}
-
-	private void validateSkills(List<Skill> skills) {
-		Objects.requireNonNull(skills);
-		validateSkillDuplicate(skills);
-	}
-
-	private void validateSkillDuplicate(List<Skill> skills) {
-		Set<Skill> distinctSkills = new HashSet<Skill>(skills);
-		if (distinctSkills.size() != skills.size()) {
-			throw new IllegalArgumentException("중복된 스킬이 있습니다.");
-		}
 	}
 
 	public boolean canLearn(Skill skill, int index) {
 		if (contains(skill)) {
-			Skill nextLearnSkill = prerequisiteSkills.get(index);
-			return nextLearnSkill.equals(skill);
+			Integer nextLearnSkillIndex = prerequisiteSkills.get(skill);
+			return nextLearnSkillIndex.equals(index);
 		}
 		return true;
 	}
 
 	public boolean contains(Skill skill) {
-		return prerequisiteSkills.contains(skill);
+		return prerequisiteSkills.containsKey(skill);
 	}
 }
 
@@ -118,7 +112,7 @@ class Solution {
 	private int canLearnCount = 0;
 
 	public int solution(String skill, String[] skillTrees) {
-		List<Skill> prerequisiteSkills = SkillFactory.createSkills(skill);
+		Map<Skill, Integer> prerequisiteSkills = SkillFactory.createPrerequisiteSkills(skill);
 		PrerequisiteSkill prerequisiteSkill = new PrerequisiteSkill(prerequisiteSkills);
 		for (String skillTree: skillTrees) {
 			checkLearnAvailability(prerequisiteSkill, skillTree);
