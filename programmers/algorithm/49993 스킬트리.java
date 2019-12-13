@@ -30,7 +30,7 @@ class Skill {
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		Skill skill1 = (Skill)o;
+		Skill skill1 = (Skill) o;
 		return Objects.equals(skill, skill1.skill);
 	}
 
@@ -49,7 +49,7 @@ class SkillBook {
 
 	public boolean isAvailableSkillTree(List<Skill> skillTree) {
 		int nextLearnPrerequisiteSkillIndex = 0;
-		for (Skill skill: skillTree) {
+		for (Skill skill : skillTree) {
 			if (!canLearn(skill, nextLearnPrerequisiteSkillIndex)) {
 				return false;
 			}
@@ -74,7 +74,7 @@ class SkillBook {
 }
 
 class SkillFactory {
-	public static Map<Skill, Integer> createPrerequisiteSkills (String input) {
+	public static Map<Skill, Integer> createPrerequisiteSkills(String input) {
 		Map<Skill, Integer> skills = new HashMap<>();
 		for (int index = 0; index < input.length(); ++index) {
 			skills.put(new Skill(input.charAt(index)), index);
@@ -82,9 +82,9 @@ class SkillFactory {
 		return skills;
 	}
 
-	public static List<Skill> createSkills (String input) {
+	public static List<Skill> createSkills(String input) {
 		List<Skill> skills = new ArrayList<>();
-		for (char skill: input.toCharArray()) {
+		for (char skill : input.toCharArray()) {
 			skills.add(new Skill(skill));
 		}
 		return skills;
@@ -100,7 +100,7 @@ class Solution {
 
 	private int getCanLearnSkillTreeCount(SkillBook skillBook, String[] skillTrees) {
 		int canLearnCount = 0;
-		for (String skillTree: skillTrees) {
+		for (String skillTree : skillTrees) {
 			if (canLearnSkillTree(skillBook, skillTree)) {
 				++canLearnCount;
 			}
