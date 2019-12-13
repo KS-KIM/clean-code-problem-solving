@@ -40,6 +40,39 @@ class Skill {
 	}
 }
 
+class SkillBook {
+	private final Map<Skill, Integer> prerequisiteSkills;
+
+	public SkillBook(Map<Skill, Integer> prerequisiteSkills) {
+		this.prerequisiteSkills = Objects.requireNonNull(prerequisiteSkills);
+	}
+
+	public boolean isAvailableSkillTree(List<Skill> skillTree) {
+		int nextLearnPrerequisiteSkillIndex = 0;
+		for (Skill skill: skillTree) {
+			if (!canLearn(skill, nextLearnPrerequisiteSkillIndex)) {
+				return false;
+			}
+			if (isPrerequisiteSkill(skill)) {
+				++nextLearnPrerequisiteSkillIndex;
+			}
+		}
+		return true;
+	}
+
+	public boolean canLearn(Skill skill, int nextLearnPrerequisiteSkillIndex) {
+		if (isPrerequisiteSkill(skill)) {
+			Integer nextLearnSkillIndex = prerequisiteSkills.get(skill);
+			return nextLearnSkillIndex.equals(nextLearnPrerequisiteSkillIndex);
+		}
+		return true;
+	}
+
+	public boolean isPrerequisiteSkill(Skill skill) {
+		return prerequisiteSkills.containsKey(skill);
+	}
+}
+
 class SkillFactory {
 	public static Map<Skill, Integer> createPrerequisiteSkills (String input) {
 		Map<Skill, Integer> skills = new HashMap<>();
@@ -58,73 +91,25 @@ class SkillFactory {
 	}
 }
 
-class PrerequisiteSkill {
-	private final Map<Skill, Integer> prerequisiteSkills;
-
-	public PrerequisiteSkill(Map<Skill, Integer> prerequisiteSkills) {
-		this.prerequisiteSkills = prerequisiteSkills;
-	}
-
-	public boolean canLearn(Skill skill, int index) {
-		if (contains(skill)) {
-			Integer nextLearnSkillIndex = prerequisiteSkills.get(skill);
-			return nextLearnSkillIndex.equals(index);
-		}
-		return true;
-	}
-
-	public boolean contains(Skill skill) {
-		return prerequisiteSkills.containsKey(skill);
-	}
-}
-
-class SkillBook {
-	private final PrerequisiteSkill prerequisiteSkill;
-	private final List<Skill> skills;
-	private int learnedPrerequisiteSkill = 0;
-
-	public SkillBook(PrerequisiteSkill prerequisiteSkill, List<Skill> skills) {
-		this.prerequisiteSkill = Objects.requireNonNull(prerequisiteSkill);
-		this.skills = Objects.requireNonNull(skills);
-	}
-
-	public boolean isAvailableSkillTree() {
-		for (Skill skill: skills) {
-			if (!canLearn(skill)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private boolean canLearn(Skill skill) {
-		if (!prerequisiteSkill.canLearn(skill, learnedPrerequisiteSkill)) {
-			return false;
-		}
-		if (prerequisiteSkill.contains(skill)) {
-			++learnedPrerequisiteSkill;
-		}
-		return true;
-	}
-}
-
 class Solution {
-	private int canLearnCount = 0;
-
 	public int solution(String skill, String[] skillTrees) {
 		Map<Skill, Integer> prerequisiteSkills = SkillFactory.createPrerequisiteSkills(skill);
-		PrerequisiteSkill prerequisiteSkill = new PrerequisiteSkill(prerequisiteSkills);
+		SkillBook skillBook = new SkillBook(prerequisiteSkills);
+		return getCanLearnSkillTreeCount(skillBook, skillTrees);
+	}
+
+	private int getCanLearnSkillTreeCount(SkillBook skillBook, String[] skillTrees) {
+		int canLearnCount = 0;
 		for (String skillTree: skillTrees) {
-			checkLearnAvailability(prerequisiteSkill, skillTree);
+			if (canLearnSkillTree(skillBook, skillTree)) {
+				++canLearnCount;
+			}
 		}
 		return canLearnCount;
 	}
 
-	private void checkLearnAvailability(PrerequisiteSkill prerequisiteSkill, String skillTree) {
+	private boolean canLearnSkillTree(SkillBook skillBook, String skillTree) {
 		List<Skill> skills = SkillFactory.createSkills(skillTree);
-		SkillBook skillBook = new SkillBook(prerequisiteSkill, skills);
-		if (skillBook.isAvailableSkillTree()) {
-			++canLearnCount;
-		}
+		return skillBook.isAvailableSkillTree(skills);
 	}
 }
