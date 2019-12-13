@@ -99,20 +99,20 @@ class SkillFactory {
 class Solution {
 	public int solution(String skill, String[] skillTrees) {
 		SkillBook skillBook = SkillFactory.createSkillBook(skill);
-		return getCanLearnSkillTreeCount(skillBook, skillTrees);
+		return getLearnableCount(skillBook, skillTrees);
 	}
 
-	private int getCanLearnSkillTreeCount(SkillBook skillBook, String[] skillTrees) {
+	private int getLearnableCount(SkillBook skillBook, String[] skillTrees) {
 		int canLearnCount = 0;
 		for (String skillTree : skillTrees) {
-			if (canLearnSkillTree(skillBook, skillTree)) {
+			if (canLearn(skillBook, skillTree)) {
 				++canLearnCount;
 			}
 		}
 		return canLearnCount;
 	}
 
-	private boolean canLearnSkillTree(SkillBook skillBook, String skillTree) {
+	private boolean canLearn(SkillBook skillBook, String skillTree) {
 		List<Skill> skills = SkillFactory.createSkills(skillTree);
 		return skillBook.isAvailableSkillTree(skills);
 	}
